@@ -7,6 +7,7 @@
 
 // ------------- CODE -------------
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -28,6 +29,12 @@ const string labelGradeCharacter = "Your Grade is ";
 const double ASSIGNMENTS_WEIGHT = 60.0;
 const double EXAM_WEIGHT = 20.0;
 
+const double MIN_SCORE = 0.0;
+const double MAX_SCORE = 4.0;
+
+const int MIN_ASSIGNMENT_COUNT = 0;
+const int MAX_ASSIGNMENT_COUNT = 10;
+
 // Function prototypes (if any)
 void welcome();
 
@@ -38,6 +45,8 @@ int readInt(string prompt);
 //  The function must do data validation to make sure it is a numeric value, and 
 //  that it is within the range of 0 to 4 inclusive.
 double readScore(string prompt);
+
+double readDouble(string prompt);
 
  // Read the Assignment scores from the user.  
  // Calculate and return the average score.
@@ -56,20 +65,18 @@ char calcLetterGrade(double classNumericScore);
 // https://en.cppreference.com/w/cpp/language/main_function.html
 int main() {
 
-  // Read the midterm exam score and the final exam score in main() by calling the readScore() function.
-  // Print the letter grade in main().
-  return 0;
-}
-
-// Function implementations (if any)
-// Function prototypes (if any)
-void welcome()
-{
-  cout << messageWelcome << endl;
+  welcome();
   cout << messageInstructions << endl;
 
-  int countAssignments = readInt(promptNumberOfAssignments);
-  
+  int countAssignments = 0;
+  bool next = true;
+  while(next) {
+    countAssignments = readInt(promptNumberOfAssignments);
+    if(MIN_ASSIGNMENT_COUNT <= countAssignments && countAssignments <= MAX_ASSIGNMENT_COUNT) {
+      next = false;
+    } 
+  }
+
   double assignmentAverageScore = assignAverage(countAssignments);
   double midtermExamScore = readScore(promptMidtermExamScore);
   double finalExamScore = readScore(promptFinalExamScore);
@@ -81,6 +88,14 @@ void welcome()
   cout << labelGradeCharacter << letterGrade << endl;
 
   cout << messageThankYou << endl;
+  return 0;
+}
+
+// Function implementations (if any)
+// Function prototypes (if any)
+void welcome()
+{
+  cout << messageWelcome << endl;
 }
 
 // Validate and conditionally re-prompt
@@ -88,16 +103,51 @@ void welcome()
 int readInt(string prompt)
 {
   int n = 0;
-  cout << "TODO: int readInt(string prompt)" << endl;
+  bool next = true;
+  while(next) {
+    cout << prompt;
+    cin >> n;
+    if(cin) {
+      next = false;
+    } else {
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+  }
   return n;
 } 
+
+double readDouble(string prompt) {
+  double d = 0;
+  bool next = true;
+  while(next) {
+    cout << prompt;
+    cin >> d;
+    if(cin) {
+      next = false;
+    } else {
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+  }
+  return d;
+}
  
 //  The function must do data validation to make sure it is a numeric value, and 
 //  that it is within the range of 0 to 4 inclusive.
 double readScore(string prompt)
 {
+  bool next = true;
   double d = 0;
-  cout << "TODO: double readScore(string prompt)" << endl;
+  while(next) {
+    d = readDouble(prompt);
+    if(d >= MIN_SCORE && d <= MAX_SCORE) {
+      next = false;
+    } else {
+      cout << messageScoreRange << endl;
+    }
+  }
+
   return d;
 }
 
