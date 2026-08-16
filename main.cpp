@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const string messageWelcome =  "Welcome to my Final Grade Calculator!";
+const string messageWelcome =  "Welcome to the Final Grade Calculator";
 const string messageInstructions = "Please enter the following information and I will calculate your Final Numerical Grade and Letter Grade for you!\n"
                             "The number of assignments must be between 0 and 10.\n"
                             "All scores entered must be between 0 and 4.\n";
@@ -182,30 +182,139 @@ char calcLetterGrade(double classNumericScore)
 
 // ------------- DESIGN -------------
 /* 
-Program Name:
+Program Name: The Final Grade Calculator
 
-Program Description:
+Program Description: The program is designed to calculate a students final grade using a 4.0 letter score, 
+calculate the average using assignment score, midterm and final exam scores to the corresponding letter grade
 
 Design:
 A. INPUT
-Define the input variables including name data type. 
+numAssignments :int total number of assignments completed 
+currentAssignmentScore: float point the score earned on each assignment
+midTermScore: float point the score earned on the mid term
+FinalExamScore: float point the score earned on the final exam
+
 
 B. OUTPUT
-Define the output variables including data types. 
+AssignmentAverage: float point calculated average score of all assignments
+totalWeightScore: float point calculated number of score
+letterGrade: single character the letter grade corresponding with final weighted grade
+
 
 C. CALCULATIONS
-Describe calculations used by algorithms in step D.  
-List all formulas. 
-If there are no calculations needed, state there are no calculations.
+ Total assignment tracking
+assignmentSum = assignmentSum + currentAssignmentScore
+Assignment average
+AssignmentAverage = assignmentSum/NumAssignments
+Final score
+totalWeightedScore = (assignmentAverage * 0.60) + (midtermScore * 0.20) + finalExamScore * 0.20)
+
 
 D. LOGIC and ALGORITHMS
-Design the logic of your program using pseudocode or flowcharts. 
-Use conditionals, loops, functions or array constructs.
-List the steps in transforming inputs into outputs. 
-https://github.com/Glen-Sasek-PCC-Instructor/2025-06-22/blob/main/Pseudocode-Reference.txt
+MODULE welcome():
+    PRINT "Welcome to the Final Grade Calculator!"
+    PRINT "Please enter the following information and I will calculate your"
+    PRINT "Final Numerical Grade and Letter Grade for you!"
+    PRINT "The number of assignments must be between 0 and 10."
+    PRINT "All scores entered must be between 0 and 4."
+END MODULE
+
+MODULE readInt(prompt):
+    SET value TO -1
+    WHILE value < 0 OR value > 10:
+        PRINT prompt
+        READ value
+        IF value IS INVALID OR value < 0 OR value > 10 THEN
+            PRINT "Invalid input. Must be between 0 and 10."
+            RESET value TO -1
+        END IF
+    END WHILE
+    RETURN value
+END MODULE
+
+MODULE readScore(prompt):
+    SET score TO -1.0
+    SET isValid TO false
+    WHILE isValid IS false:
+        PRINT prompt
+        READ score
+        IF score IS INVALID OR score < 0.0 OR score > 4.0 THEN
+            PRINT "Invalid input. Must be between 0 and 4."
+        ELSE
+            SET isValid TO true
+        END IF
+    END WHILE
+    RETURN score
+END MODULE
+
+MODULE assignAverage(numAssigns):
+    SET sum TO 0.0
+    FOR i FROM 1 TO numAssigns:
+        SET currentAssignmentScore TO readScore("Enter score " + i + ": ")
+        SET sum TO sum + currentAssignmentScore
+    END FOR
+    RETURN sum / numAssigns
+END MODULE
+
+MODULE calcFinalScore(assignAvg, midterm, final):
+    RETURN (assignAvg * 0.60) + (midterm * 0.20) + (final * 0.20)
+END MODULE
+
+MODULE calcLetterGrade(finalScore):
+    IF finalScore >= 3.3 THEN
+        RETURN 'A'
+    ELSE IF finalScore >= 2.8 THEN
+        RETURN 'B'
+    ELSE IF finalScore >= 2.0 THEN
+        RETURN 'C'
+    ELSE IF finalScore >= 1.2 THEN
+        RETURN 'D'
+    ELSE
+        RETURN 'F'
+    END IF
+END MODULE
+
+MODULE main():
+    CALL welcome()
+    
+    SET numAssignments TO readInt("Enter the number of assignments (0 to 10): ")
+    
+    SET assignmentAvg TO 0.0
+    IF numAssignments > 0 THEN
+        SET assignmentAvg TO assignAverage(numAssignments)
+    END IF
+    
+    SET midtermScore TO readScore("Enter your midterm exam score: ")
+    SET finalExamScore TO readScore("Enter your final exam score: ")
+    
+    SET totalWeightedScore TO calcFinalScore(assignmentAvg, midtermScore, finalExamScore)
+    SET letterGrade TO calcLetterGrade(totalWeightedScore)
+    
+    PRINT "Your Final Numeric score is " + totalWeightedScore with 1 decimal digit precision
+    PRINT "Your Final Grade is " + letterGrade
+    PRINT "Thank you for using the Grade Calculator!"
+END MODULE
 
 
 SAMPLE RUNS
 Copy from assignment document.
+Welcome to the Final Grade Calculator!
+Please enter the grade information and I will calculate your
+Final Numerical Grade and Letter Grade for you!
+The number of assignments must be between 0 and 10.
+All scores entered must be between 0 and 4.
+
+Enter the number of assignments (0 to 10): 3
+Enter score 1: 3
+Enter score 2: 4
+Enter score 3: 2.5
+
+Enter your midterm exam score: 2.5
+Enter your final exam score: 2
+
+Your Final Numeric score is 2.8
+Your Final Grade is B
+
+Thank you for using the final Grade Calculator!
 
 */
